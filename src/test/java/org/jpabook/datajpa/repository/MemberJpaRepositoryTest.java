@@ -1,5 +1,7 @@
 package org.jpabook.datajpa.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.jpabook.datajpa.entity.Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ class MemberJpaRepositoryTest {
 
     @Autowired
     MemberJpaRepository memberJpaRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember() {
@@ -88,5 +93,22 @@ class MemberJpaRepositoryTest {
         //then
         assertEquals(members.size(), 3);
         assertEquals(totalCount, 5);
+    }
+
+    @Test
+    public void bulkAgePlus() throws Exception {
+        //given
+        memberJpaRepository.save(new Member("member1", 10));
+        memberJpaRepository.save(new Member("member2", 19));
+        memberJpaRepository.save(new Member("member3", 20));
+        memberJpaRepository.save(new Member("member4", 21));
+        memberJpaRepository.save(new Member("member5", 40));
+
+        //when
+        int resultCount = memberJpaRepository.bulkAgePlus(20);
+        em.flush();
+        em.clear();
+        //then
+        assertEquals(resultCount, 3);
     }
 }

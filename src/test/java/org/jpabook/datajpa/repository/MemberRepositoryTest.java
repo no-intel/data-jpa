@@ -1,5 +1,7 @@
 package org.jpabook.datajpa.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.jpabook.datajpa.dto.MemberDto;
 import org.jpabook.datajpa.entity.Member;
 import org.jpabook.datajpa.entity.Team;
@@ -25,6 +27,9 @@ class MemberRepositoryTest {
 
     @Autowired
     TeamRepository teamRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember() throws Exception {
@@ -148,5 +153,21 @@ class MemberRepositoryTest {
         assertEquals(page.getTotalPages(), 2);
         assertTrue(page.isFirst());
         assertTrue(page.hasNext());
+    }
+
+    @Test
+    public void bulkAgePlus() throws Exception {
+        //given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+        //when
+        int resultCount = memberRepository.bulkAgePlus(20);
+
+        //then
+        assertEquals(resultCount, 3);
     }
 }

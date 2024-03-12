@@ -2,6 +2,8 @@ package org.jpabook.datajpa.repository;
 
 import org.jpabook.datajpa.dto.MemberDto;
 import org.jpabook.datajpa.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,4 +23,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT new org.jpabook.datajpa.dto.MemberDto(m.id, m.username, t.name) FROM Member m JOIN m.team t")
     List<MemberDto> findMemberDto();
+
+    Page<Member> findByAge(int age, Pageable pageable);
 }

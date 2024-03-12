@@ -1,6 +1,8 @@
 package org.jpabook.datajpa.repository;
 
+import org.jpabook.datajpa.dto.MemberDto;
 import org.jpabook.datajpa.entity.Member;
+import org.jpabook.datajpa.entity.Team;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Transactional
@@ -16,6 +18,9 @@ class MemberRepositoryTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
 
     @Test
     public void testMember() throws Exception {
@@ -83,5 +88,35 @@ class MemberRepositoryTest {
         assertEquals(result.get(0).getUsername(), "AAA");
         assertEquals(result.get(0).getAge(), 10);
         assertEquals(result.get(0), m1);
+    }
+
+    @Test
+    public void findUsernameList() throws Exception {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<String> result = memberRepository.findUsernameList();
+
+        for (String s : result) {
+            System.out.println("s = " + s);
+        }
+    }
+
+    @Test
+    public void findMemberDto() throws Exception {
+        Team teamA = new Team("teamA");
+        teamRepository.save(teamA);
+
+        Member m1 = new Member("AAA", 10);
+        m1.changeTeam(teamA);
+        memberRepository.save(m1);
+
+        List<MemberDto> result = memberRepository.findMemberDto();
+
+        for (MemberDto dto : result) {
+            System.out.println("dto = " + dto);
+        }
     }
 }

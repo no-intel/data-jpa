@@ -191,4 +191,13 @@ class MemberRepositoryTest {
             System.out.println("member = " + member.getTeam().getName());
         }
     }
+
+    @Test
+    public void callCustom() throws Exception {
+        //given
+        List<Member> memberCustom = memberRepository.findMemberCustom();
+        //when
+
+        //then
+    }
 }
